@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ottermark",
+  "productName": "OtterMark",
   "version": "0.1.0",
   "identifier": "pl.ottersoft.ottermark",
   "build": {
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "ottermark",
-        "width": 800,
-        "height": 600
+        "title": "OtterMark",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 800,
+        "minHeight": 500
       }
     ],
     "security": {

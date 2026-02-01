@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #ffffff;
+  --color-surface-dark: #1e1e2e;
+  --color-text: #1e1e2e;
+  --color-text-dark: #cdd6f4;
+  --color-border: #e2e8f0;
+  --color-border-dark: #313244;
+  --color-accent: #7c3aed;
+  --color-accent-hover: #6d28d9;
+}
+
+:root {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
