@@ -15,6 +15,7 @@
     Quote,
     Code,
     Minus,
+    Info,
   } from "lucide-svelte";
   import { theme, isDirty, currentFilePath } from "$lib/stores/editor";
 
@@ -24,9 +25,10 @@
     onSaveFile: () => void;
     onSaveAs: () => void;
     onInsertMarkdown: (syntax: string) => void;
+    onAbout: () => void;
   }
 
-  let { onNewFile, onOpenFile, onSaveFile, onSaveAs, onInsertMarkdown }: Props =
+  let { onNewFile, onOpenFile, onSaveFile, onSaveAs, onInsertMarkdown, onAbout }: Props =
     $props();
 
   let currentTheme = $state<"light" | "dark">("light");
@@ -121,6 +123,10 @@
   </div>
 
   <div class="w-px h-5 mx-1 {currentTheme === 'dark' ? 'bg-[#313244]' : 'bg-[#e2e8f0]'}"></div>
+
+  <button class="toolbar-btn" onclick={onAbout} title="About OtterMark">
+    <Info size={18} />
+  </button>
 
   <button class="toolbar-btn" onclick={toggleTheme} title="Toggle Theme">
     {#if currentTheme === "dark"}

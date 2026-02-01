@@ -6,6 +6,7 @@
   import Editor from "$lib/components/Editor.svelte";
   import Preview from "$lib/components/Preview.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
+  import AboutDialog from "$lib/components/AboutDialog.svelte";
   import {
     content,
     currentFilePath,
@@ -16,6 +17,7 @@
 
   let editorComponent: Editor;
   let currentTheme = $state<"light" | "dark">("light");
+  let showAbout = $state(false);
 
   theme.subscribe((t) => (currentTheme = t));
 
@@ -174,6 +176,7 @@
     onSaveFile={saveFile}
     onSaveAs={saveAs}
     onInsertMarkdown={insertMarkdown}
+    onAbout={() => (showAbout = true)}
   />
 
   <div class="flex flex-1 min-h-0">
@@ -188,3 +191,5 @@
     </div>
   </div>
 </div>
+
+<AboutDialog open={showAbout} onClose={() => (showAbout = false)} />
