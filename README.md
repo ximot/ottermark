@@ -1,7 +1,33 @@
-# Tauri + SvelteKit + TypeScript
+# OtterMark
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+Markdown editor built with Tauri v2 + SvelteKit + CodeMirror 6.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+- Live dual-pane editing (editor + preview)
+- GFM (GitHub Flavored Markdown) support
+- Light / dark theme
+- Toolbar with common markdown formatting
+- Keyboard shortcuts (Ctrl+S, Ctrl+O, Ctrl+N, Ctrl+Shift+S)
+
+## Tech Stack
+
+- **Runtime**: Tauri v2 (Rust backend, WebView frontend)
+- **Frontend**: SvelteKit (SPA mode), Svelte 5
+- **Editor**: CodeMirror 6
+- **Preview**: marked
+- **Styling**: Tailwind CSS v4
+- **Package manager**: Bun
+
+## Development
+
+```bash
+bun install
+bun run tauri dev
+```
+
+## Building
+
+```bash
+bun run tauri build
+```
