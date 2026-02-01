@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OtterMark
+Comment=Markdown editor
+Exec=ottermark
+Icon=pl.ottersoft.ottermark
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;
+MimeType=text/markdown;text/x-markdown;text/plain;
+StartupWMClass=OtterMark

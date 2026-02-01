@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>pl.ottersoft.ottermark</id>
+  <name>OtterMark</name>
+  <summary>Markdown editor with live preview</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="pl.ottersoft">
+    <name>OtterSoft</name>
+  </developer>
+  <description>
+    <p>
+      OtterMark is a lightweight markdown editor with a live preview pane.
+      Built with Tauri, SvelteKit, and CodeMirror 6, it provides a fast native
+      editing experience with syntax highlighting, GitHub Flavored Markdown
+      support, and a clean split-view interface.
+    </p>
+  </description>
+  <launchable type="desktop-id">pl.ottersoft.ottermark.desktop</launchable>
+  <url type="homepage">https://github.com/ottersoft/ottermark</url>
+  <content_rating type="oars-1.1" />
+  <branding>
+    <color type="primary" scheme_preference="light">#e8f5e9</color>
+    <color type="primary" scheme_preference="dark">#1b5e20</color>
+  </branding>
+  <releases>
+    <release version="0.1.0" date="2025-01-01">
+      <description>
+        <p>Initial release with core editing and preview functionality.</p>
+      </description>
+    </release>
+  </releases>
+</component>
