@@ -11,7 +11,7 @@ jobs:
         include:
           - os: windows-latest
             bundles: nsis,msi
-          - os: macos-13
+          - os: macos-15-intel
             bundles: dmg
           - os: macos-latest
             bundles: dmg
@@ -45,7 +45,7 @@ jobs:
             src-tauri/target/release/bundle/msi/*.msi
 
       - name: Upload artifacts (macOS Intel)
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-15-intel'
         uses: actions/upload-artifact@v4
         with:
           name: macos-intel
