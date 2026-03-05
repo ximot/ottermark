@@ -3,10 +3,13 @@
   import { open, save } from "@tauri-apps/plugin-dialog";
   import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import { getCurrentWindow } from "@tauri-apps/api/window";
+  import { invoke } from "@tauri-apps/api/core";
   import Editor from "$lib/components/Editor.svelte";
   import Preview from "$lib/components/Preview.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
   import AboutDialog from "$lib/components/AboutDialog.svelte";
+  import RecoveryDialog from "$lib/components/RecoveryDialog.svelte";
+  import { get } from "svelte/store";
   import {
     content,
     currentFilePath,
@@ -18,13 +21,43 @@
   let editorComponent: Editor;
   let currentTheme = $state<"light" | "dark">("light");
   let showAbout = $state(false);
+  let showRecoveryDialog = $state(false);
+  let recoveryContentToRestore = $state("");
 
   theme.subscribe((t) => (currentTheme = t));
 
   onMount(() => {
+    // Check for crash recovery on startup
+    checkForRecovery();
+
     const unsub = windowTitle.subscribe((title) => {
       getCurrentWindow().setTitle(title);
     });
+
+    // Autosave timer - runs every 30 seconds
+    const autosaveInterval = setInterval(async () => {
+      if (get(isDirty)) {
+        try {
+          await invoke("write_recovery_file", { content: get(content) });
+        } catch (err) {
+          console.error("Failed to autosave:", err);
+        }
+      }
+    }, 30000);
+
+    // Cleanup recovery file on normal app exit
+    let unlistenClose: (() => void) | null = null;
+    getCurrentWindow()
+      .onCloseRequested(async () => {
+        try {
+          await invoke("delete_recovery_file");
+        } catch (err) {
+          // Silently ignore if recovery file doesn't exist
+        }
+      })
+      .then((unlisten) => {
+        unlistenClose = unlisten;
+      });
 
     function handleKeydown(e: KeyboardEvent) {
       if (e.ctrlKey || e.metaKey) {
@@ -52,9 +85,40 @@
     window.addEventListener("keydown", handleKeydown);
     return () => {
       unsub();
+      if (unlistenClose) unlistenClose();
+      clearInterval(autosaveInterval);
       window.removeEventListener("keydown", handleKeydown);
     };
   });
+
+  async function checkForRecovery() {
+    try {
+      const exists = await invoke<boolean>("recovery_exists");
+      if (!exists) return;
+      const recoveryContent = await invoke<string>("read_recovery_file");
+      if (recoveryContent) {
+        recoveryContentToRestore = recoveryContent;
+        showRecoveryDialog = true;
+      }
+    } catch (err) {
+      // Silently ignore if recovery check fails
+    }
+  }
+
+  async function handleRecover() {
+    content.set(recoveryContentToRestore);
+    isDirty.set(true);
+    if (editorComponent) {
+      editorComponent.setContent(recoveryContentToRestore);
+    }
+    await invoke("delete_recovery_file");
+    showRecoveryDialog = false;
+  }
+
+  async function handleDiscard() {
+    await invoke("delete_recovery_file");
+    showRecoveryDialog = false;
+  }
 
   async function newFile() {
     content.set("# \n\n");
@@ -84,8 +148,7 @@
   }
 
   async function saveFile() {
-    let path: string | null = null;
-    currentFilePath.subscribe((p) => (path = p))();
+    const path = get(currentFilePath);
 
     if (!path) {
       await saveAs();
@@ -93,9 +156,7 @@
     }
 
     try {
-      let text = "";
-      content.subscribe((c) => (text = c))();
-      await writeTextFile(path, text);
+      await writeTextFile(path, get(content));
       isDirty.set(false);
     } catch (err) {
       console.error("Failed to save file:", err);
@@ -112,9 +173,7 @@
       });
       if (!path) return;
 
-      let text = "";
-      content.subscribe((c) => (text = c))();
-      await writeTextFile(path, text);
+      await writeTextFile(path, get(content));
       currentFilePath.set(path);
       isDirty.set(false);
     } catch (err) {
@@ -193,3 +252,9 @@
 </div>
 
 <AboutDialog open={showAbout} onClose={() => (showAbout = false)} />
+
+<RecoveryDialog
+  open={showRecoveryDialog}
+  onRecover={handleRecover}
+  onDiscard={handleDiscard}
+/>

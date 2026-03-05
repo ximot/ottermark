@@ -10,6 +10,7 @@ export const theme = writable<"light" | "dark">(
     : "light",
 );
 
+
 export const windowTitle = derived(
   [currentFilePath, isDirty],
   ([$path, $dirty]) => {
