@@ -30,13 +30,13 @@ modules:
         only-arches:
           - x86_64
         url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-x64.zip
-        sha256: FILL_SHA256_X64
+        sha256: 88f64bedee330ff4d6328e3e90c669bc7ac5314927c604f85e329ea2a1d1979b
         strip-components: 1
       - type: archive
         only-arches:
           - aarch64
         url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-aarch64.zip
-        sha256: FILL_SHA256_AARCH64
+        sha256: ee1b5cabb5fdbb25640787e329846ef41384ca8699db504f45bfee015f348b58
         strip-components: 1
 
   - name: ottermark
