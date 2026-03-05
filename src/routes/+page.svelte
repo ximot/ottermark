@@ -7,6 +7,7 @@
   import Editor from "$lib/components/Editor.svelte";
   import Preview from "$lib/components/Preview.svelte";
   import Toolbar from "$lib/components/Toolbar.svelte";
+  import Splitter from "$lib/components/Splitter.svelte";
   import AboutDialog from "$lib/components/AboutDialog.svelte";
   import RecoveryDialog from "$lib/components/RecoveryDialog.svelte";
   import { get } from "svelte/store";
@@ -19,6 +20,7 @@
   } from "$lib/stores/editor";
 
   let editorComponent: Editor;
+  let splitPosition = $state(50);
   let currentTheme = $state<"light" | "dark">("light");
   let showAbout = $state(false);
   let showRecoveryDialog = $state(false);
@@ -225,13 +227,11 @@
   />
 
   <div class="flex flex-1 min-h-0">
-    <div
-      class="w-1/2 h-full border-r
-        {currentTheme === 'dark' ? 'border-[#313244]' : 'border-[#e2e8f0]'}"
-    >
+    <div class="h-full overflow-hidden" style="width: {splitPosition}%">
       <Editor bind:this={editorComponent} />
     </div>
-    <div class="w-1/2 h-full">
+    <Splitter bind:position={splitPosition} />
+    <div class="h-full overflow-hidden" style="width: {100 - splitPosition}%">
       <Preview />
     </div>
   </div>
