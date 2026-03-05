@@ -26,7 +26,7 @@ modules:
   - name: ottermark
     buildsystem: simple
     build-commands:
-      - npm ci --offline --cache=flatpak-node/npm-cache
+      - npm install --offline --cache=flatpak-node/npm-cache
       - npx vite build
       - cargo build --release --manifest-path src-tauri/Cargo.toml
       - install -Dm755 src-tauri/target/release/ottermark /app/bin/ottermark
