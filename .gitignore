@@ -14,10 +14,10 @@ flatpak/build-dir/
 flatpak/build-staging/
 .flatpak-builder/
 
-# Auto Claude data directory
+# AI tooling
+CLAUDE.md
+PLAN.md
 .auto-claude/
-
-# Auto Claude generated files
 .auto-claude-security.json
 .auto-claude-status
 .claude_settings.json

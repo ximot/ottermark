@@ -85,8 +85,9 @@
               ? 'text-[#89b4fa] hover:text-[#b4d0fb]'
               : 'text-[#3b82f6] hover:text-[#2563eb]'}"
           >
-            ximot
-          </a>
+            Tomasz 'XimoT' Wyderka
+          </a> 
+          <i>🦦</i>
         </div>
       </div>
     </div>
