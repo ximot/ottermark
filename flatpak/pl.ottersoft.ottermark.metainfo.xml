@@ -17,14 +17,26 @@
     </p>
   </description>
   <launchable type="desktop-id">pl.ottersoft.ottermark.desktop</launchable>
-  <url type="homepage">https://github.com/ottersoft/ottermark</url>
+  <url type="homepage">https://github.com/ximot/ottermark</url>
+  <url type="bugtracker">https://github.com/ximot/ottermark/issues</url>
+  <url type="vcs-browser">https://github.com/ximot/ottermark</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>OtterMark editor with light theme</caption>
+      <image>https://raw.githubusercontent.com/ximot/ottermark/master/screens/screen1.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>OtterMark editor with dark theme</caption>
+      <image>https://raw.githubusercontent.com/ximot/ottermark/master/screens/screen2.png</image>
+    </screenshot>
+  </screenshots>
   <content_rating type="oars-1.1" />
   <branding>
     <color type="primary" scheme_preference="light">#e8f5e9</color>
     <color type="primary" scheme_preference="dark">#1b5e20</color>
   </branding>
   <releases>
-    <release version="0.1.0" date="2025-01-01">
+    <release version="0.1.0" date="2026-03-05">
       <description>
         <p>Initial release with core editing and preview functionality.</p>
       </description>
