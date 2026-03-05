@@ -2,6 +2,8 @@ app-id: pl.ottersoft.ottermark
 runtime: org.gnome.Platform
 runtime-version: '48'
 sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
 command: ottermark
 
 finish-args:
@@ -12,17 +14,44 @@ finish-args:
   - --filesystem=home
   - --env=WEBKIT_DISABLE_DMABUF_RENDERER=1
 
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin
+  env:
+    CARGO_HOME: /run/build/ottermark/cargo
+    RUSTFLAGS: '--remap-path-prefix =../'
+
 modules:
+  - name: bun
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 bun /app/bin/bun
+    sources:
+      - type: archive
+        only-arches:
+          - x86_64
+        url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-x64.zip
+        sha256: FILL_SHA256_X64
+        strip-components: 1
+      - type: archive
+        only-arches:
+          - aarch64
+        url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-aarch64.zip
+        sha256: FILL_SHA256_AARCH64
+        strip-components: 1
+
   - name: ottermark
     buildsystem: simple
     build-commands:
-      - install -Dm755 ottermark /app/bin/ottermark
-      - install -Dm644 pl.ottersoft.ottermark.desktop /app/share/applications/pl.ottersoft.ottermark.desktop
-      - install -Dm644 pl.ottersoft.ottermark.metainfo.xml /app/share/metainfo/pl.ottersoft.ottermark.metainfo.xml
-      - install -Dm644 icons/32x32.png /app/share/icons/hicolor/32x32/apps/pl.ottersoft.ottermark.png
-      - install -Dm644 icons/128x128.png /app/share/icons/hicolor/128x128/apps/pl.ottersoft.ottermark.png
-      - install -Dm644 icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/pl.ottersoft.ottermark.png
-      - install -Dm644 icons/icon.png /app/share/icons/hicolor/512x512/apps/pl.ottersoft.ottermark.png
+      - bun install --frozen-lockfile
+      - bun run build
+      - cargo build --release --manifest-path src-tauri/Cargo.toml
+      - install -Dm755 src-tauri/target/release/ottermark /app/bin/ottermark
+      - install -Dm644 flatpak/pl.ottersoft.ottermark.desktop /app/share/applications/pl.ottersoft.ottermark.desktop
+      - install -Dm644 flatpak/pl.ottersoft.ottermark.metainfo.xml /app/share/metainfo/pl.ottersoft.ottermark.metainfo.xml
+      - install -Dm644 src-tauri/icons/32x32.png /app/share/icons/hicolor/32x32/apps/pl.ottersoft.ottermark.png
+      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/pl.ottersoft.ottermark.png
+      - install -Dm644 src-tauri/icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/pl.ottersoft.ottermark.png
+      - install -Dm644 src-tauri/icons/icon.png /app/share/icons/hicolor/512x512/apps/pl.ottersoft.ottermark.png
     sources:
       - type: dir
-        path: build-staging
+        path: ..
