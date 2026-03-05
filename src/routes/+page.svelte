@@ -45,19 +45,6 @@
       }
     }, 30000);
 
-    // Cleanup recovery file on normal app exit
-    let unlistenClose: (() => void) | null = null;
-    getCurrentWindow()
-      .onCloseRequested(async () => {
-        try {
-          await invoke("delete_recovery_file");
-        } catch (err) {
-          // Silently ignore if recovery file doesn't exist
-        }
-      })
-      .then((unlisten) => {
-        unlistenClose = unlisten;
-      });
 
     function handleKeydown(e: KeyboardEvent) {
       if (e.ctrlKey || e.metaKey) {
@@ -85,7 +72,6 @@
     window.addEventListener("keydown", handleKeydown);
     return () => {
       unsub();
-      if (unlistenClose) unlistenClose();
       clearInterval(autosaveInterval);
       window.removeEventListener("keydown", handleKeydown);
     };

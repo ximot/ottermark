@@ -53,6 +53,13 @@ pub fn run() {
             recovery_exists,
             delete_recovery_file
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|_app, event| {
+            if let tauri::RunEvent::Exit = event {
+                if let Ok(path) = get_recovery_file_path() {
+                    let _ = fs::remove_file(path);
+                }
+            }
+        });
 }
