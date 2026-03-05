@@ -4,6 +4,7 @@ runtime-version: '48'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.node20
 command: ottermark
 
 finish-args:
@@ -15,37 +16,18 @@ finish-args:
   - --env=WEBKIT_DISABLE_DMABUF_RENDERER=1
 
 build-options:
-  append-path: /usr/lib/sdk/rust-stable/bin
-  build-args:
-    - --share=network
+  append-path: /usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node20/bin
   env:
     CARGO_HOME: /run/build/ottermark/cargo
     RUSTFLAGS: '--remap-path-prefix =../'
+    npm_config_nodedir: /usr/lib/sdk/node20
 
 modules:
-  - name: bun
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 bun /app/bin/bun
-    sources:
-      - type: archive
-        only-arches:
-          - x86_64
-        url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-x64.zip
-        sha256: 88f64bedee330ff4d6328e3e90c669bc7ac5314927c604f85e329ea2a1d1979b
-        strip-components: 1
-      - type: archive
-        only-arches:
-          - aarch64
-        url: https://github.com/oven-sh/bun/releases/download/bun-v1.2.5/bun-linux-aarch64.zip
-        sha256: ee1b5cabb5fdbb25640787e329846ef41384ca8699db504f45bfee015f348b58
-        strip-components: 1
-
   - name: ottermark
     buildsystem: simple
     build-commands:
-      - bun install --frozen-lockfile
-      - bun run build
+      - npm ci --offline --cache=flatpak-node/npm-cache
+      - npx vite build
       - cargo build --release --manifest-path src-tauri/Cargo.toml
       - install -Dm755 src-tauri/target/release/ottermark /app/bin/ottermark
       - install -Dm644 flatpak/pl.ottersoft.ottermark.desktop /app/share/applications/pl.ottersoft.ottermark.desktop
@@ -57,3 +39,14 @@ modules:
     sources:
       - type: dir
         path: ..
+      - node-sources.json
+      - cargo-sources.json
+      - type: inline
+        contents: |
+          [source.crates-io]
+          replace-with = "vendored-sources"
+
+          [source.vendored-sources]
+          directory = "cargo/vendor"
+        dest: cargo
+        dest-filename: config.toml
